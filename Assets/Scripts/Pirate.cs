@@ -4,23 +4,68 @@ using UnityEngine;
 
 public class Pirate : MonoBehaviour
 {
-    public Material injured;
     private int health = 2;
+    public Material injured;
 
-    public void tookDamage()
+    private Material[] og = new Material[30];
+    private Transform ship;
+
+    void Awake()
     {
-        print("hit" + ", " + health);
-        health--;
-
-        if (health == 1)
+        if (tag != "Large Pirate Ship")
         {
-            for (int i = 0; i <= 1; i++)
+            ship = transform.GetChild(0).transform.GetChild(0);
+            for (int i = 0; i < ship.transform.childCount; i++)
             {
-                transform.GetChild(i).transform.GetComponent<Renderer>().material = injured;
+                og[i] = ship.transform.GetChild(i).transform.GetComponent<Renderer>().material;
             }
         }
 
-        if (health == 0)
-            Destroy(gameObject);
+        if (tag == "Large Pirate Ship")
+            health = 5;
+    }
+
+    public IEnumerator tookDamage()
+    {
+        health--;
+        if (health >= 0)
+            transform.GetComponent<AudioSource>().Play();
+
+        if (health == 1)
+            transform.GetComponent<Rigidbody>().mass = 5;
+
+        if (gameObject.tag != "Large Pirate Ship")
+        {
+            for (int i = 0; i < ship.transform.childCount; i++)
+            {
+                ship.transform.GetChild(i).transform.GetComponent<Renderer>().material = injured;
+            }
+
+            yield return new WaitForSeconds(0.4f);
+
+            if (health == 1)
+            {
+                for (int i = 0; i < ship.transform.childCount; i++)
+                {
+                    ship.transform.GetChild(i).transform.GetComponent<Renderer>().material = og[i];
+                }
+            }
+        }
+        else
+        {
+            print("yeah");
+
+        }
+
+        if (health <= 0)
+            Destroy(gameObject, 2.0f);
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.layer == 11)
+        {
+            StartCoroutine(tookDamage());
+        }
     }
 }

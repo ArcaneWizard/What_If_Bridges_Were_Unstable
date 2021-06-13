@@ -23,9 +23,12 @@ public class Shooting : MonoBehaviour
     private float timer = 0;
     private float power = 0;
 
+    private AudioSource audio;
+
     void Awake()
     {
         camera = transform.parent;
+        audio = transform.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -38,6 +41,7 @@ public class Shooting : MonoBehaviour
             timer += Time.deltaTime;
         if (Input.GetMouseButtonUp(0) && !isReloading)
         {
+            audio.Play();
             power = Mathf.Min(timer, 1.7f);
             StartCoroutine(shootArrow());
         }

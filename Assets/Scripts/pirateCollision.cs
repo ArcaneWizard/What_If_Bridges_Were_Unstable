@@ -6,7 +6,8 @@ public class pirateCollision : MonoBehaviour
 {
     private void OnCollisionEnter(Collision col)
     {
-        transform.parent.transform.GetComponent<Pirate>().tookDamage();
-        col.transform.GetChild(0).gameObject.SetActive(false);
+        print("hit");
+        //        StartCoroutine(transform.parent.transform.parent.transform.parent.GetComponent<Pirate>().tookDamage());
+        //col.transform.GetChild(0).gameObject.SetActive(false);
     }
 }

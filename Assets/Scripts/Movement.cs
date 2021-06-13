@@ -8,6 +8,9 @@ using UnityEngine.XR;
 public class Movement : MonoBehaviour
 {
     private Rigidbody rig;
+    private AudioSource audio;
+
+    public GameObject[] feet;
 
     public Camera camera;
     private int x, z = 0;
@@ -17,9 +20,18 @@ public class Movement : MonoBehaviour
     public float sensitivity = 150f;
     private float xRotation = 0;
 
+    private bool grounded = false;
+
     void Awake()
     {
         rig = transform.GetComponent<Rigidbody>();
+        audio = transform.GetComponent<AudioSource>();
+        audio.Pause();
+    }
+
+    void Start()
+    {
+        StartCoroutine(groundCheck());
     }
 
     void FixedUpdate()
@@ -42,6 +54,13 @@ public class Movement : MonoBehaviour
 
         rig.velocity = new Vector3(xChange, rig.velocity.y, zChange);
         camera.transform.position = transform.position + new Vector3(0, 3.2f, 0f);
+
+        if ((x != 0 || z != 0) && !audio.isPlaying && grounded)
+        {
+            audio.Play();
+        }
+        else if (x == 0 && z == 0 || !grounded)
+            audio.Pause();
     }
 
     // Update is called once per frame
@@ -51,7 +70,7 @@ public class Movement : MonoBehaviour
         lookAroundCode();
 
         //jump
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
             Debug.Log("jumped once");
             rig.AddForce(jumpForce);
@@ -73,5 +92,29 @@ public class Movement : MonoBehaviour
 
         camera.transform.localRotation = Quaternion.Euler(xRotation, desiredX, 0);
         transform.localRotation = Quaternion.Euler(0, desiredX, 0);
+    }
+
+    private IEnumerator groundCheck()
+    {
+        grounded = isGrounded();
+        yield return new WaitForSeconds(0.1f);
+        StartCoroutine(groundCheck());
+    }
+
+    private bool isGrounded()
+    {
+        RaycastHit hit, hit2, hit3, hit4;
+
+        Physics.Raycast(feet[0].transform.position, Vector3.down, out hit, 0.6f);
+        Physics.Raycast(feet[1].transform.position, Vector3.down, out hit2, 0.6f);
+        Physics.Raycast(feet[2].transform.position, Vector3.down, out hit3, 0.6f);
+        Physics.Raycast(feet[3].transform.position, Vector3.down, out hit4, 0.6f);
+
+        if (hit.point == Vector3.zero && hit2.point == Vector3.zero && hit3.point == Vector3.zero && hit4.point == Vector3.zero)
+        {
+            return false;
+        }
+        else
+            return true;
     }
 }
