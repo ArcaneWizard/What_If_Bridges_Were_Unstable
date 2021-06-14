@@ -80,11 +80,11 @@ public class PirateNavigation : MonoBehaviour
         //find that ship type's specific elevation
         float elevation = 0;
         if (shipType == 0)
-            elevation = -95f;
+            elevation = -99f;
         else if (shipType == 1)
-            elevation = -92.6f;
+            elevation = -95.4f;
         else if (shipType == 2)
-            elevation = -95.6f;
+            elevation = -100f;
 
         pirateShip.parent = transform;
         pirateShip.position = new Vector3(transform.position.x + offset.x, elevation, transform.position.z + offset.y);
@@ -94,9 +94,9 @@ public class PirateNavigation : MonoBehaviour
     private int selectRandomPirateShip()
     {
         int r = Random.Range(0, 11);
-        if (r >= 5)
+        if (r >= 1)
             return 0;
-        else if (r <= 4 && r >= 1)
+        else if (r <= 3 && r >= 1)
             return 1;
         else
             return 2;

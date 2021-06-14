@@ -4,23 +4,28 @@ using UnityEngine;
 
 public class arrow : MonoBehaviour
 {
-    bool once;
+    private bool syncRotation = true;
+    private Rigidbody rig;
+
+    void Awake()
+    {
+        rig = transform.GetComponent<Rigidbody>();
+
+        if (transform.parent == null)
+            Debug.LogError("Arrows must have be a child object of camera at the start of the game.");
+    }
 
     void Update()
     {
-        if (transform.position.y < -104f && !once)
-        {
-            once = true;
-            StartCoroutine(playRippleSound());
-        }
+        if (transform.parent != null && !syncRotation)
+            syncRotation = true;
+
+        if (transform.parent == null && rig.velocity.magnitude > 1.2f && syncRotation)
+            transform.forward = rig.velocity.normalized;
     }
 
-    private IEnumerator playRippleSound()
+    void OnCollisionEnter(Collision other)
     {
-        gameObject.transform.Translate(Vector3.down * 20f);
-        //transform.GetComponent<AudioSource>().Play();
-        yield return new WaitForSeconds(1f);
-        once = false;
-        gameObject.SetActive(false);
+        syncRotation = false;
     }
 }

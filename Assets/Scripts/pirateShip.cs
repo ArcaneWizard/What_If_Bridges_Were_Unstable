@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,12 +22,12 @@ public class pirateShip : MonoBehaviour
         pirateTarget = new Vector3(transform.parent.position.x, transform.position.y, transform.parent.position.z);
         distance = (pirateTarget - transform.position).magnitude;
 
-        float newDistance = Random.Range(0, distance);
-        Vector2 newOffset = Random.insideUnitCircle.normalized * newDistance;
+        float newDistance = UnityEngine.Random.Range(Math.Max(0, distance - 200), distance);
+        Vector2 newOffset = UnityEngine.Random.insideUnitCircle.normalized * newDistance;
         nextPosition = new Vector3(pirateTarget.x + newOffset.x, transform.position.y, pirateTarget.z + newOffset.y);
         transform.LookAt(nextPosition - transform.position);
 
-        speed = Random.Range(3.5f, 6f);
+        speed = UnityEngine.Random.Range(6f, 11f);
     }
 
     // Update is called once per frame
@@ -50,8 +51,10 @@ public class pirateShip : MonoBehaviour
 
     private Vector3 calculateNextPosition()
     {
-        float newDistance = Random.Range(0, distance);
-        Vector2 newOffset = Random.insideUnitCircle.normalized * newDistance;
+        speed = UnityEngine.Random.Range(6f, 11f);
+
+        float newDistance = UnityEngine.Random.Range(Math.Max(0, distance - 200), distance);
+        Vector2 newOffset = UnityEngine.Random.insideUnitCircle.normalized * newDistance;
         nextPosition = new Vector3(pirateTarget.x + newOffset.x, transform.position.y, pirateTarget.z + newOffset.y);
         return nextPosition;
     }

@@ -8,7 +8,7 @@ public class Narration : MonoBehaviour
     public Text narrator;
     public Text narrator2;
     private PirateNavigation pirateNavigation;
-    public float narrationSpeed = 45f;
+    public float narrationSpeed = 60f;
     public float pauseBtwnMessages = 2.5f;
     public float pauseAfterClearingMsg = 0.4f;
 
@@ -26,15 +26,17 @@ public class Narration : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        narrateMessage("Hey, look at this amazing rig!");
+        /*narrateMessage("Hey, look at this amazing rig!");
         narrateMessage("Wait you have a bow? Hold your mouse down for power and then release to shoot.");
         narrateMessage("Now, it sure would be a bummer if pirates attacked ur rig.");
 
         narrateMessage("Wait, is that a pirate ship in the horizon?");
         narrateMessage("Get ready for an ONSLAUGHT!");
-        narrateMessage("Get ready for an ONSLAUGHT!");
 
-        narrateMessage("Wave 1");
+        narrateMessage("Wave 1");*/
+
+        StartCoroutine(pirateNavigation.spawnPirateShips());
+
     }
 
     // Update is called once per frame
